@@ -2,7 +2,7 @@ streamlit
 llama-index
 llama-index-embeddings-gemini
 llama-index-core
-llama-index-llms-core
+llama-index-llms
 nltk
 pyttsx3
 gtts
