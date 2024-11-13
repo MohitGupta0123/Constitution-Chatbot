@@ -1,9 +1,7 @@
 import streamlit as st
-from llama_index.core import SimpleDirectoryReader, Settings, StorageContext
+from llama_index.core import SimpleDirectoryReader, Settings, StorageContext, VectorStoreIndex, SimpleKeywordTableIndex, get_response_synthesizer
 from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.llms.gemini import Gemini
-from llama_index.core import VectorStoreIndex, SimpleKeywordTableIndex
-from llama_index.core import get_response_synthesizer
 from llama_index.core.retrievers import BaseRetriever, VectorIndexRetriever, KeywordTableSimpleRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
 from typing import List
