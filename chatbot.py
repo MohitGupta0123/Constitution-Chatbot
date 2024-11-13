@@ -13,7 +13,7 @@ from dotenv import load_dotenv
 import re
 import nltk
 from nltk.corpus import stopwords
-from streamlit_audio_recorder import audio_recorder
+import pyaudio
 import whisper
 import pyttsx3
 import numpy as np
@@ -128,39 +128,25 @@ def initialize_query_engine():
 
     return RetrieverQueryEngine(retriever=custom_retriever, response_synthesizer=response_synthesizer)
 
-# # Transcribe audio using Whisper
-# def transcribe_audio():
-#     audio = pyaudio.PyAudio()
-#     stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
-#     st.write("Listening for your question...")
-
-#     frames = []
-#     for _ in range(0, int(16000 / 1024 * 5)):
-#         data = stream.read(1024)
-#         frames.append(data)
-
-#     stream.stop_stream()
-#     stream.close()
-#     audio.terminate()
-
-#     audio_data = b"".join(frames)
-#     audio_np = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
-#     transcription = whisper_model.transcribe(audio_np)
-#     return transcription["text"]
-
 # Transcribe audio using Whisper
 def transcribe_audio():
-    audio_data = audio_recorder()
-    if audio_data is not None:
-        # Save audio data to temporary file
-        with tempfile.NamedTemporaryFile(delete=False, suffix=".wav") as temp_audio_file:
-            temp_audio_file.write(audio_data)
-            temp_audio_path = temp_audio_file.name
+    audio = pyaudio.PyAudio()
+    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
+    st.write("Listening for your question...")
 
-        # Transcribe audio
-        transcription = whisper_model.transcribe(temp_audio_path)
-        return transcription["text"]
-    return None
+    frames = []
+    for _ in range(0, int(16000 / 1024 * 5)):
+        data = stream.read(1024)
+        frames.append(data)
+
+    stream.stop_stream()
+    stream.close()
+    audio.terminate()
+
+    audio_data = b"".join(frames)
+    audio_np = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
+    transcription = whisper_model.transcribe(audio_np)
+    return transcription["text"]
 
 # Text-to-speech output using gTTS
 @st.cache_resource
