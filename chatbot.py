@@ -119,9 +119,6 @@ def initialize_query_engine():
 
 # Transcribe audio using streamlit_mic_recorder
 def transcribe_audio():
-    # if audio_bytes is None:
-    #     return ""
-    # print('yes')
     transcription = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
     return transcription
 
@@ -205,7 +202,7 @@ if query:
             st.balloons()
             assistant_message = {
                 "role": "assistant",
-                "content": response,
+                "content": "Response Generated",
                 "message_type": "success",
                 "timestamp": timestamp
             }

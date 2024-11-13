@@ -80,4 +80,3 @@ pip install -r requirements.txt
 - **Multilingual Support**: Integrate support for multilingual transcription and response translation.
 - **Advanced Document Preprocessing**: Enable document pre-filtering and enrichment for more specialized document sets.
 - **Add Image/Video Explaining Functionality**: Enabling asking questions from a user uploaded image or video.
-
