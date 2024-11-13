@@ -4,7 +4,6 @@ llama-index-core
 llama-index-embeddings-gemini
 llama-index-llms-gemini
 nltk
-pyttsx3
 gtts
 python-dotenv
 streamlit-mic-recorder

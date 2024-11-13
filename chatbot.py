@@ -4,27 +4,19 @@ from llama_index.embeddings.gemini import GeminiEmbedding
 from llama_index.llms.gemini import Gemini
 from llama_index.core.retrievers import BaseRetriever, VectorIndexRetriever, KeywordTableSimpleRetriever
 from llama_index.core.query_engine import RetrieverQueryEngine
-from typing import List
 import os
 import json
 from dotenv import load_dotenv
 import re
 import nltk
 from nltk.corpus import stopwords
-import pyttsx3
-import numpy as np
 import tempfile
 from gtts import gTTS
 from datetime import datetime
-from streamlit_mic_recorder import mic_recorder, speech_to_text
+from streamlit_mic_recorder import speech_to_text
 
 # Download stopwords if not already downloaded
 nltk.download('stopwords')
-# load_dotenv()
-
-# Initialize the Whisper model for STT (Removed pyaudio and Whisper)
-# whisper_model = whisper.load_model("base")  # Removed
-# engine = pyttsx3.init()
 
 st.set_page_config(page_title="L.A.W.S. Chatbot", page_icon="💬", layout="centered")
 
@@ -190,11 +182,6 @@ if input_method == "Text":
         st.session_state['messages'].append({"role": "user", "content": query, "timestamp": timestamp})
 elif input_method == "Voice":
     st.write(" Click the Button to Record your voice")
-    # audio = mic_recorder(start_prompt="Start", stop_prompt="Stop", key='recorder')
-
-    # if audio is not None:
-        # # Play the recorded audio
-        # st.audio(audio['bytes'])
 
     with st.spinner("Transcribing audio..."):
         query = transcribe_audio()
