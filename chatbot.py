@@ -24,7 +24,7 @@ nltk.download('stopwords')
 
 # Initialize the Whisper model for STT (Removed pyaudio and Whisper)
 # whisper_model = whisper.load_model("base")  # Removed
-engine = pyttsx3.init()
+# engine = pyttsx3.init()
 
 st.set_page_config(page_title="L.A.W.S. Chatbot", page_icon="💬", layout="centered")
 
