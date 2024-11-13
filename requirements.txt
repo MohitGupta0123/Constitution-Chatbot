@@ -3,7 +3,6 @@ llama-index
 llama-index-core
 llama-index-embeddings-gemini
 llama-index-llms-gemini
-llama_index-core-retrievers
 llama_index-core-query_engine
 nltk
 pyttsx3
