@@ -13,20 +13,19 @@ from dotenv import load_dotenv
 import re
 import nltk
 from nltk.corpus import stopwords
-import pyaudio
-import whisper
 import pyttsx3
 import numpy as np
 import tempfile
 from gtts import gTTS
 from datetime import datetime
+from streamlit_mic_recorder import mic_recorder, speech_to_text
 
 # Download stopwords if not already downloaded
 nltk.download('stopwords')
-load_dotenv()
+# load_dotenv()
 
-# Initialize the Whisper model for STT
-whisper_model = whisper.load_model("base")
+# Initialize the Whisper model for STT (Removed pyaudio and Whisper)
+# whisper_model = whisper.load_model("base")  # Removed
 engine = pyttsx3.init()
 
 st.set_page_config(page_title="L.A.W.S. Chatbot", page_icon="💬", layout="centered")
@@ -128,25 +127,13 @@ def initialize_query_engine():
 
     return RetrieverQueryEngine(retriever=custom_retriever, response_synthesizer=response_synthesizer)
 
-# Transcribe audio using Whisper
+# Transcribe audio using streamlit_mic_recorder
 def transcribe_audio():
-    audio = pyaudio.PyAudio()
-    stream = audio.open(format=pyaudio.paInt16, channels=1, rate=16000, input=True, frames_per_buffer=1024)
-    st.write("Listening for your question...")
-
-    frames = []
-    for _ in range(0, int(16000 / 1024 * 5)):
-        data = stream.read(1024)
-        frames.append(data)
-
-    stream.stop_stream()
-    stream.close()
-    audio.terminate()
-
-    audio_data = b"".join(frames)
-    audio_np = np.frombuffer(audio_data, dtype=np.int16).astype(np.float32) / 32768.0
-    transcription = whisper_model.transcribe(audio_np)
-    return transcription["text"]
+    # if audio_bytes is None:
+    #     return ""
+    # print('yes')
+    transcription = speech_to_text(language='en', use_container_width=True, just_once=True, key='STT')
+    return transcription
 
 # Text-to-speech output using gTTS
 @st.cache_resource
@@ -171,13 +158,8 @@ if 'custom_query_engine' not in st.session_state:
 if 'input_method_selected' not in st.session_state:
     st.session_state['input_method_selected'] = None
 
-# Select input method
 st.sidebar.markdown("## Input Method")
 input_method = st.sidebar.selectbox("Choose input method:", ("Text", "Voice"), key="input_method")
-
-# Initialize conversation history
-if 'messages' not in st.session_state:
-    st.session_state['messages'] = []
 
 # Save Conversation
 if st.sidebar.button("Save Conversation"):
@@ -209,15 +191,21 @@ if input_method == "Text":
         # Append user message to messages
         st.session_state['messages'].append({"role": "user", "content": query, "timestamp": timestamp})
 elif input_method == "Voice":
-    if st.button("Record Question"):
-        with st.spinner("Recording... Speak now."):
-            query = transcribe_audio()
-        st.write("Recording stopped.")  
-        st.write(f"Transcribed Text: {query}")
-        # Display the user's transcribed question in the chat
-        if query:
-            timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
-            st.session_state['messages'].append({"role": "user", "content": query, "timestamp": timestamp})
+    st.write(" Click the Button to Record your voice")
+    # audio = mic_recorder(start_prompt="Start", stop_prompt="Stop", key='recorder')
+
+    # if audio is not None:
+        # # Play the recorded audio
+        # st.audio(audio['bytes'])
+
+    with st.spinner("Transcribing audio..."):
+        query = transcribe_audio()
+
+    st.write(f"Transcribed Text: {query}")
+
+    if query:
+        timestamp = datetime.now().strftime("%Y-%m-%d %H:%M:%S")
+        st.session_state['messages'].append({"role": "user", "content": query, "timestamp": timestamp})
 
 # Process the query and get the response
 if query:
@@ -232,14 +220,14 @@ if query:
             st.balloons()
             assistant_message = {
                 "role": "assistant",
-                "content": "Response Generated",
+                "content": response,
                 "message_type": "success",
                 "timestamp": timestamp
             }
             st.session_state['messages'].append(assistant_message)
         else:
             response = """You are asking OUT OF CONTEXT INFORMATION. That is not available to me. 
-                            \n Try something else 😊\n"""
+                        \n Try something else 😊\n"""
             assistant_message = {
                 "role": "assistant",
                 "content": "No Context Found",
@@ -274,8 +262,8 @@ for message in st.session_state['messages']:
                 st.warning(f"{message['content']}")
             else:
                 st.markdown(f"{message['content']}  \n*{message['timestamp']}*")
-                # If there is an audio file, display the audio player
-                if "audio" in message:
-                    with open(message["audio"], "rb") as f:
-                        audio_bytes = f.read()
-                    st.audio(audio_bytes, format='audio/mp3', start_time=0)
+            # If there is an audio file, display the audio player
+            if "audio" in message:
+                with open(message["audio"], "rb") as f:
+                    audio_bytes = f.read()
+                st.audio(audio_bytes, format='audio/mp3', start_time=0)

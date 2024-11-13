@@ -1,9 +1,9 @@
-llama-index
 streamlit
-llama-index-embeddings-gemini
-llama-index-llms-gemini
-python-dotenv
+llama-index
+nltk
 pyttsx3
-pyaudio
-openai-whisper
 gtts
+python-dotenv
+streamlit-mic-recorder
+pandas
+numpy

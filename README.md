@@ -17,12 +17,12 @@ This application is a chatbot framework that enables users to interact with a sp
   - `streamlit`
   - `llama_index`
   - `nltk`
-  - `pyaudio`
+  - `streamlit-mic-recorder`
   - `pyttsx3`
   - `whisper`
   - `gtts`
   - `numpy`
-  - `dotenv`
+  - `python-dotenv`
 
 To install dependencies, use:
 ```bash
