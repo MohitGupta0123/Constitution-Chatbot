@@ -1,4 +1,4 @@
-# Ask your PDF
+# Constitutional Chatbot
 
 This application is a chatbot framework that enables users to interact with a specified document or set of documents through both text and voice inputs. It leverages semantic embeddings and large language models (LLM) to provide contextually accurate answers, Whisper for speech-to-text (STT) conversion, and pyttsx3 for text-to-speech (TTS) output. Built with Streamlit, this chatbot allows users to ask questions and receive informative responses from any uploaded document.
 
