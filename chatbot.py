@@ -112,7 +112,7 @@ def initialize_query_engine():
 
             return [combined_dict[r_id] for r_id in retrieve_ids]
 
-    custom_retriever = CustomRetriever(vector_retriever, keyword_retriever)
+    custom_retriever = CustomRetriever(vector_retriever, keyword_retriever, "OR")
     response_synthesizer = get_response_synthesizer()
 
     return RetrieverQueryEngine(retriever=custom_retriever, response_synthesizer=response_synthesizer)
